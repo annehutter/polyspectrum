@@ -94,7 +94,7 @@ int main (int argc, /*const*/ char * argv[]) {
     printf("done FFT\n");
 
     int num = 40;
-    int n = 2;
+    int n = 3;
     double *k = allocate_array_double(num, "k");
     double *kvalue = allocate_array_double(n, "kvalue");
 
