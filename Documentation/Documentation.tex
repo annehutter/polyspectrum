@@ -1,0 +1,174 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.3 (9/9/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside,10pt]{article}
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=30pt,margin=20mm]{geometry} % Document margins
+\usepackage{multicol} % Used for the two-column layout of the document
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+\usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
+
+\usepackage{abstract} % Allows abstract customization
+% \renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+% \renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+% \renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+% \renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{Lyman-$\alpha$ transport} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage[authoryear,round]{natbib}
+
+\usepackage{xcolor}
+\usepackage{mathrsfs}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{\vspace{-15mm}\fontsize{24pt}{10pt}\selectfont\textbf{\sc Documentation}} % Article title
+
+\author{
+\large
+\textsc{Anne Hutter}\thanks{A thank you or further information}\\[2mm] % Your name
+\normalsize Kapteyn Astronomical Institute, University of Groningen \\ % Your institution
+\normalsize \href{mailto:a.k.hutter@rug.nl}{a.k.hutter@rug.nl} % Your email address
+\vspace{-5mm}
+}
+\date{}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Insert title
+
+\thispagestyle{fancy} % All pages have headers and footers
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\begin{abstract}
+
+\noindent
+
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\begin{multicols}{2} % Two-column layout throughout the main article text
+
+\section{Fast Fourier Transformation Conventions}
+
+\subsection{FFTW}
+
+The software package {\sc FFTW} computes the Fourier transformation as follows: the forward transformation ($FFT$), i.e. real to k-space, is defined as
+\begin{eqnarray}
+ FFT[r] = F_m &=& \sum_{n=0}^{N_\mathrm{side}-1} r_n\ e^{-2\pi \sqrt{-1} n m  / N_\mathrm{side}},
+\end{eqnarray}
+while the backward transformation ($IFFT$), i.e. k- to real space, is defined as
+\begin{eqnarray}
+ IFFT[F] = r_n &=& \sum_{m=0}^{N_\mathrm{side}-1} F_m\ e^{2\pi \sqrt{-1} n m / N_\mathrm{side}}.
+\end{eqnarray}
+We note that this definition leads to $IFFT[FFT[r]] = N_\mathrm{side} r$ and not $r$.
+
+\subsection{NUMPY}
+
+For the {\sc FFTW} defintion to be consistent with the $FFT$ implementation in {\sc numpy}, the backward Fourier transformation $IFFT$ needs to be multiplied with $1/N_\mathrm{side}$, yielding
+\begin{eqnarray}
+ r_n &=&  \textcolor{red}{\frac{1}{N_\mathrm{side}}} \sum_{m=0}^{N_\mathrm{side}-1} F_m\ e^{2\pi \sqrt{-1} n m / N_\mathrm{side}}.
+\end{eqnarray}
+
+\section{Reformulating Watkinson's formalism}
+
+In the following we adopt the {\sc FFTW} definition and call the forward and backward Fourier transformation $FFT$ and $IFFT$ respectively.
+
+The polyspectrum is given as
+\begin{eqnarray}
+ \mathscr{P}({\bf k}_1, {\bf k}_2, ..., {\bf k}_p) &\approx& \frac{1}{V} \left(\frac{V}{N_\mathrm{pix}}\right)^{p}  \frac{\sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{D}({\bf n}, {\bf k}_i)}{\sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{I}({\bf n}, {\bf k}_i)}
+\end{eqnarray}
+whereas the functions $\mathscr{F}$ and $\mathscr{I}$ are given as
+\begin{eqnarray}
+ \mathscr{D} ({\bf n}, {\bf k}_i) &=& \sum\limits_{{\bf l}_i\pm s/2} FFT[\delta]({\bf m}_i)\ e^{i 2 \pi {\bf n} {\bf m}_i / N_\mathrm{side}}\\
+ \mathscr{I} ({\bf n}, {\bf k}_i) &=& \sum\limits_{{\bf l}_i\pm s/2} e^{i 2 \pi {\bf n} {\bf m}_i / N_\mathrm{side}}.
+\end{eqnarray}
+$N_\mathrm{pix}$ are all cells, i.e. for a 3D grid this would be $N_\mathrm{side}^3$.
+${\bf l}_i = |({\bf k}_i/k_F)-{\bf m}_i|$ represent the deviation between the exact value of ${\bf k}_i$ and the binned value $k_F {\bf m}_i$. $s$ represents the binwidth and ideally should be kept to the width of a pixel.
+
+\paragraph{Computing $\mathscr{I}$:}
+
+In practise we can compute $\mathscr{D}$ and $\mathscr{I}$ as follows: We identify all pixels that fulfill the criterion ${\bf k}_i/k_f \simeq {\bf m}_i$, and generate a filter $\mathscr{F}({\bf m}_i)$ that is $1$ when the criterion is fulfilled and $0$ otherwise. Since we want all triangles that fulfill $\sum\limits_i^p {\bf m}_i=0$, the actual criterion is $|{\bf k}_i|/k_f = |{\bf m}_i|$.
+\begin{eqnarray}
+ \mathscr{I} ({\bf n}, {\bf k}_i) &=& \sum\limits_{{\bf l}_i\pm s/2} e^{i 2 \pi {\bf n} {\bf m}_i / N_\mathrm{side}} \nonumber \\
+ &=& \sum\limits_{n}^{N_\mathrm{pix}} \mathscr{F}({\bf m}_i) e^{i 2 \pi {\bf n} {\bf m}_i / N_\mathrm{side}} \nonumber \\
+ &=& IFFT[\mathscr{F}({\bf m}_i)]
+\end{eqnarray}
+In the first step over all cells that fulfill the criterion is looped, while in the second step we loop over all cells but set all cells that do not fulfill the criterion to zero.
+
+\paragraph{Computing $\mathscr{D}$:}
+
+$\mathscr{D}$ can be calculated analogously to $\mathscr{I}$. Where the filter function $\mathscr{F}({\bf m}_i)$ has values of $1$, the corresponding filter function $\mathscr{W}({\bf m}_i)$ has values of $FFT[\delta]({\bf m}_i)$. 
+
+Finally we derive the polyspectrum as
+\begin{eqnarray}
+ \mathscr{P}({\bf k}_1, {\bf k}_2, ..., {\bf k}_p) &\approx& \frac{1}{V} \left(\frac{V}{N_\mathrm{pix}}\right)^{p}  \frac{\sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{D}({\bf n}, {\bf k}_i)}{\sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{I}({\bf n}, {\bf k}_i)}
+\end{eqnarray}
+and with the Fourier definition according to {\sc numpy}
+\begin{eqnarray}
+ \mathscr{P}({\bf k}_1, {\bf k}_2, ..., {\bf k}_p) &\approx& V^{p-1}  \frac{\sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{D}({\bf n}, {\bf k}_i)}{\sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{I}({\bf n}, {\bf k}_i)}.
+\end{eqnarray}
+
+\paragraph{Note:} The resulting powerspectrum relates to the dimension free power spectrum as $\Delta^2(k)= \frac{1}{2\pi^2} k^3 P(k)$.
+
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+
+\begin{thebibliography}{99} % Bibliography - this is intentionally simple in this template
+
+ 
+\end{thebibliography}
+
+%----------------------------------------------------------------------------------------
+
+\end{multicols}
+
+\end{document}
