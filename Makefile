@@ -14,7 +14,7 @@ SOURCES := 	./src/main.c \
 
 OBJECTS := $(SOURCES:.c=.o)
 DOBJECTS := $(SOURCES:.c=.d)
-EXECUTABLE := bispectrum
+EXECUTABLE := polyspectrum
 
 USE-MPI=YES
  
