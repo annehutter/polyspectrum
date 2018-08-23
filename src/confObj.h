@@ -38,9 +38,12 @@ struct confObj_struct {
     double         sigma8;
     double         Y;
     
-    //Bispectrum 
+    //Polyspectrum 
+    int            n;
     double         k1;
     double         k2;
+    int            sweep_through_theta;
+    int            num_values;
     double         theta;
     
     //Output

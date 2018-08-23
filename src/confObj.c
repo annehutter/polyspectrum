@@ -67,13 +67,19 @@ confObj_new(parse_ini_t ini)
     getFromIni(&(config->Y), parse_ini_get_double,
                ini, "Y", "Cosmology");
 
-    //Vectors
+    //Polyspectrum
+    getFromIni(&(config->n), parse_ini_get_int32,
+               ini, "n", "Polyspectrum");
     getFromIni(&(config->k1), parse_ini_get_double,
-               ini, "k1", "Vectors");
+               ini, "k1", "Polyspectrum");
     getFromIni(&(config->k2), parse_ini_get_double,
-               ini, "k2", "Vectors");
+               ini, "k2", "Polyspectrum");
+    getFromIni(&(config->sweep_through_theta), parse_ini_get_int32,
+               ini, "sweepThroughTheta", "Polyspectrum");
+    getFromIni(&(config->num_values), parse_ini_get_int32,
+               ini, "numValues", "Polyspectrum");
     getFromIni(&(config->theta), parse_ini_get_double,
-               ini, "theta", "Vectors");
+               ini, "theta", "Polyspectrum");
     
     return config;
 }
