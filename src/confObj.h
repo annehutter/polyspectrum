@@ -29,6 +29,7 @@ struct confObj_struct {
     int            ion_inputs_in_dp;
     char           *density_file;
     char           *ion_file;
+    double         redshift;
     
     //Cosmology
     double         h;
@@ -39,6 +40,7 @@ struct confObj_struct {
     double         Y;
     
     //Polyspectrum 
+    char           *which_field;
     int            n;
     double         k1;
     double         k2;

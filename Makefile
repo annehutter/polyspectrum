@@ -9,7 +9,9 @@ SOURCES := 	./src/main.c \
 		./src/filter.c \
 		./src/utils_fftw.c \
 		./src/polyspectrum.c \
-		./src/kvectors.c
+		./src/kvectors.c \
+		./src/input_field.c \
+		./src/run.c
 
 
 OBJECTS := $(SOURCES:.c=.o)

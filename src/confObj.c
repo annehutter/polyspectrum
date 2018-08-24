@@ -46,6 +46,8 @@ confObj_new(parse_ini_t ini)
                ini, "densityFile", "Grid");
     getFromIni(&(config->ion_file), parse_ini_get_string,
                ini, "ionFile", "Grid");  
+    getFromIni(&(config->redshift), parse_ini_get_double,
+               ini, "redshift", "Grid");
     
     //Output
     getFromIni(&(config->output_dir), parse_ini_get_string,
@@ -68,6 +70,8 @@ confObj_new(parse_ini_t ini)
                ini, "Y", "Cosmology");
 
     //Polyspectrum
+    getFromIni(&(config->which_field), parse_ini_get_string,
+               ini, "whichField", "Polyspectrum"); 
     getFromIni(&(config->n), parse_ini_get_int32,
                ini, "n", "Polyspectrum");
     getFromIni(&(config->k1), parse_ini_get_double,
@@ -95,6 +99,8 @@ confObj_del(confObj_t *config)
     xfree((*config)->output_dir);
     xfree((*config)->output_basename);
 
+    xfree((*config)->which_field);
+    
     xfree(*config);
     *config = NULL;
 }

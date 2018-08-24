@@ -114,6 +114,8 @@ void deallocate_kvectors(kvectors_t *theseKvectors)
     if(theseKvectors->kpolygon != NULL) free(theseKvectors->kpolygon);
     if(theseKvectors->theta != NULL) free(theseKvectors->theta);
     if(theseKvectors->k != NULL) free(theseKvectors->k);
+    
+    free(theseKvectors);
 }
 
 double *generate_cosTheta_values(int numValues)

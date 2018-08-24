@@ -10,7 +10,6 @@
 #endif
 
 #include "utils.h"
-#include "confObj.h"
 #include "grid.h"
 
 /* functions for grid -----------------------------------------------------------------------*/
@@ -45,27 +44,21 @@ grid_t *initGrid()
     return newGrid;
 }
 
-void read_files_to_grid(grid_t *thisGrid, confObj_t thisInput)
+grid_t *initGrid_with_values(int nbins)
 {
+    grid_t *thisGrid = initGrid();
+    
 #ifdef __MPI
     ptrdiff_t alloc_local, local_n0, local_0_start;
 #else
     ptrdiff_t local_n0;
 #endif
-    int nbins;
     
-    nbins = thisInput->grid_size;
-    local_n0 = nbins;
-    
-    thisGrid->nbins = nbins;
-    thisGrid->box_size = thisInput->box_size;
-    
+    thisGrid->nbins = nbins;    
     thisGrid->local_n0 = nbins;
     thisGrid->local_0_start = 0;
     
-#ifdef __MPI
-    fftw_mpi_init();
-    
+#ifdef __MPI    
     alloc_local = fftw_mpi_local_size_3d(nbins, nbins, nbins, MPI_COMM_WORLD, &local_n0, &local_0_start);
     
     thisGrid->local_n0 = local_n0;
@@ -84,12 +77,15 @@ void read_files_to_grid(grid_t *thisGrid, confObj_t thisInput)
     initialize_grid(thisGrid->XHII, nbins, local_n0, 0.);
     initialize_grid(thisGrid->signal21cm, nbins, local_n0, 0.);
     
-//     read_array(thisGrid->igm_density, thisGrid, thisInput->density_file, thisInput->gas_inputs_in_dp);
-//     read_array(thisGrid->XHII, thisGrid, thisInput->ion_file, thisInput->ion_inputs_in_dp);
-    
 #ifdef __MPI
     MPI_Barrier(MPI_COMM_WORLD);
 #endif
+    return thisGrid;
+}
+
+void read_boxsize(grid_t *thisGrid, double box_size)
+{
+    thisGrid->box_size = box_size;
 }
 
 void read_array(fftw_complex *toThisArray, grid_t *thisGrid, char *filename, int double_precision)

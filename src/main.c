@@ -23,6 +23,8 @@
 #include "kvectors.h"
 #include "polyspectrum.h"
 
+#include "run.h"
+
 #define PI acos(-1.0)
 
 
@@ -32,7 +34,6 @@ int main (int argc, /*const*/ char * argv[]) {
 
     char iniFile[MAXLENGTH];
     confObj_t simParam;
-    kvectors_t *kVectors;
     
     double t1, t2;
 
@@ -61,38 +62,11 @@ int main (int argc, /*const*/ char * argv[]) {
         
     //read parameter file
     simParam = readConfObj(iniFile);
-    kVectors = read_params_to_kvectors(simParam);
-    
-    //grid allocation
-    grid_t *grid = initGrid();
-    read_files_to_grid(grid, simParam);
-    
-    //read in fields (option 1: ionization field, option 2: density & ionization field ->21cm field)
-    read_array(grid->igm_density, grid, simParam->density_file, simParam->gas_inputs_in_dp);
-    if(myRank == 0) printf("mean = %e\n", creal(grid->igm_density[0]));
-    fftw_complex *output = allocate_3D_array_fftw_complex(grid->nbins);
-        
-    //FFT field to k-space
-    fft_real_to_kspace(grid->nbins, grid->igm_density, output);
-    save_to_file(grid->igm_density, grid, "test_density.dat");
-    printf("done FFT\n");
 
-    for(int i=0; i<kVectors->numValues; i++)
-    {
-        kVectors->kpolygon[kVectors->n-1] = kVectors->k[i];
-        if(kVectors->n == 2) 
-        {
-            kVectors->kpolygon[0] = kVectors->k[i];
-            printf("k = %e\t P(k) = %e\n", kVectors->k[i], polyspectrum(grid->nbins, grid->local_n0, grid->local_0_start, output, kVectors->n, kVectors->kpolygon, grid->box_size));
-        }
-        if(kVectors->n == 3)
-            printf("k3 = %e\t B(k) = %e\n", kVectors->k[i], polyspectrum(grid->nbins, grid->local_n0, grid->local_0_start, output, kVectors->n, kVectors->kpolygon, grid->box_size));
-    }
-    
+    //run polyspectrum calculator
+    run(simParam);
+
     //deallocation
-    fftw_free(output);    
-    deallocate_grid(grid);
-    deallocate_kvectors(kVectors);
     confObj_del(&simParam);
 
 #ifdef __MPI

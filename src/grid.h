@@ -24,7 +24,8 @@ typedef struct
 /* functions */
 
 grid_t *initGrid();
-void read_files_to_grid(grid_t *thisGrid, confObj_t thisInput);
+grid_t *initGrid_with_values(int nbins);
+void read_boxsize(grid_t *thisGrid, double box_size);
 void read_array(fftw_complex *toThisArray, grid_t *thisGrid, char *filename, int double_precision);
 
 #ifdef __MPI
