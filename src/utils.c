@@ -35,6 +35,18 @@ char* concat2(const char *s1, const char *s2, const char *s3)
     return result;
 }
 
+char* concat3(const char *s1, const char *s2, const char *s3, const char *s4)
+{
+    char *result = malloc(strlen(s1) + strlen(s2) + strlen(s3) + strlen(s4) + 1);//+1 for the null-terminator
+    //in real code you would check for errors in malloc here
+    strcpy(result, s1);
+    strcat(result, s2);
+    strcat(result, s3);
+    strcat(result, s4);
+    
+    return result;
+}
+
 /* ------------------------------------------------------------*/
 /* ARRAY INITIALIZATION                                        */
 /* ------------------------------------------------------------*/
