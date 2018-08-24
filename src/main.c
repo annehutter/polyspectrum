@@ -15,12 +15,12 @@
 
 #include "utils.h"
 #include "confObj.h"
-#include "domain.h"
 #include "grid.h"
 
 #include "fft.h"
 #include "utils_fftw.h"
 #include "filter.h"
+#include "kvectors.h"
 #include "polyspectrum.h"
 
 #define PI acos(-1.0)
@@ -32,6 +32,7 @@ int main (int argc, /*const*/ char * argv[]) {
 
     char iniFile[MAXLENGTH];
     confObj_t simParam;
+    kvectors_t *kVectors;
     
     double t1, t2;
 
@@ -60,10 +61,7 @@ int main (int argc, /*const*/ char * argv[]) {
         
     //read parameter file
     simParam = readConfObj(iniFile);
-     
-    //do domain decomposition
-    domain_t *domain;
-    domain = initDomain(simParam->grid_size, myRank, size);
+    kVectors = read_params_to_kvectors(simParam);
     
     //grid allocation
     grid_t *grid = initGrid();
@@ -71,48 +69,30 @@ int main (int argc, /*const*/ char * argv[]) {
     
     //read in fields (option 1: ionization field, option 2: density & ionization field ->21cm field)
     read_array(grid->igm_density, grid, simParam->density_file, simParam->gas_inputs_in_dp);
-//     for(int i=0; i<grid->local_n0; i++)
-//     {
-//         for(int j=0; j<grid->nbins; j++)
-//         {
-//             for(int k=0; k<grid->nbins; k++)
-//             {
-// //                 double r = (i-grid->nbins/2)*(i-grid->nbins/2) + (j-grid->nbins/2)*(j-grid->nbins/2) + (k-grid->nbins/2)*(k-grid->nbins/2);
-//                 double factor = 3.141*20.;
-//                 grid->igm_density[i*grid->nbins*grid->nbins+j*grid->nbins+k] = sin(factor*i/(double)grid->nbins)*sin(factor*j/(double)grid->nbins)*sin(factor*k/(double)grid->nbins) + 0.*I;
-//             }
-//         }
-//     }
     if(myRank == 0) printf("mean = %e\n", creal(grid->igm_density[0]));
-    
     fftw_complex *output = allocate_3D_array_fftw_complex(grid->nbins);
         
     //FFT field to k-space
     fft_real_to_kspace(grid->nbins, grid->igm_density, output);
     save_to_file(grid->igm_density, grid, "test_density.dat");
-    
     printf("done FFT\n");
 
-    int num = 40;
-    int n = 3;
-    double *k = allocate_array_double(num, "k");
-    double *kvalue = allocate_array_double(n, "kvalue");
-
-    for(int i=0; i<num; i++)
+    for(int i=0; i<kVectors->numValues; i++)
     {
-        k[i] = 2.*PI/grid->box_size * (i + 1) * 0.5;
-        for(int j=0; j<n; j++)
-            kvalue[j] = 2.*PI/grid->box_size * (i + 1) * 0.5;
-        printf("k = %e\t B(k) = %e\n", k[i], polyspectrum(grid->nbins, grid->local_n0, grid->local_0_start, output, n, kvalue, grid->box_size));
+        kVectors->kpolygon[kVectors->n-1] = kVectors->k[i];
+        if(kVectors->n == 2) 
+        {
+            kVectors->kpolygon[0] = kVectors->k[i];
+            printf("k = %e\t P(k) = %e\n", kVectors->k[i], polyspectrum(grid->nbins, grid->local_n0, grid->local_0_start, output, kVectors->n, kVectors->kpolygon, grid->box_size));
+        }
+        if(kVectors->n == 3)
+            printf("k3 = %e\t B(k) = %e\n", kVectors->k[i], polyspectrum(grid->nbins, grid->local_n0, grid->local_0_start, output, kVectors->n, kVectors->kpolygon, grid->box_size));
     }
-    free(k);
-    free(kvalue);
     
     //deallocation
-    fftw_free(output);
-    
+    fftw_free(output);    
     deallocate_grid(grid);
-    deallocate_domain(domain);
+    deallocate_kvectors(kVectors);
     confObj_del(&simParam);
 
 #ifdef __MPI

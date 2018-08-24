@@ -1,5 +1,4 @@
 SOURCES := 	./src/main.c \
-		./src/domain.c \
 		./src/xmem.c \
 		./src/xstring.c \
 		./src/parse_ini.c \

@@ -74,8 +74,6 @@ confObj_new(parse_ini_t ini)
                ini, "k1", "Polyspectrum");
     getFromIni(&(config->k2), parse_ini_get_double,
                ini, "k2", "Polyspectrum");
-    getFromIni(&(config->sweep_through_theta), parse_ini_get_int32,
-               ini, "sweepThroughTheta", "Polyspectrum");
     getFromIni(&(config->num_values), parse_ini_get_int32,
                ini, "numValues", "Polyspectrum");
     getFromIni(&(config->theta), parse_ini_get_double,

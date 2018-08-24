@@ -42,7 +42,6 @@ struct confObj_struct {
     int            n;
     double         k1;
     double         k2;
-    int            sweep_through_theta;
     int            num_values;
     double         theta;
     
