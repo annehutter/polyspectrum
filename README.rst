@@ -3,7 +3,6 @@ Description
 
 Code to compute polyspectrum from a 3D grid following the method described in Watkinson et al. (2017).
 
-**IMPORTANT:**: This is work in progress and code has not been fully tested. Currently only powerspectra and bispectra are supported. Suggestions for improvements can be sent to `a.k.hutter@rug.nl`.
 
 Installation
 ============
