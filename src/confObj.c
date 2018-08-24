@@ -45,9 +45,7 @@ confObj_new(parse_ini_t ini)
     getFromIni(&(config->density_file), parse_ini_get_string,
                ini, "densityFile", "Grid");
     getFromIni(&(config->ion_file), parse_ini_get_string,
-               ini, "ionFile", "Grid");  
-    getFromIni(&(config->redshift), parse_ini_get_double,
-               ini, "redshift", "Grid");
+               ini, "ionFile", "Grid"); 
     
     //Output
     getFromIni(&(config->output_dir), parse_ini_get_string,

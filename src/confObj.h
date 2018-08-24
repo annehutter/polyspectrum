@@ -29,7 +29,6 @@ struct confObj_struct {
     int            ion_inputs_in_dp;
     char           *density_file;
     char           *ion_file;
-    double         redshift;
     
     //Cosmology
     double         h;
