@@ -22,6 +22,6 @@ ifdef USE-MPI
     LDFLAGS += -lmpi -lfftw3_mpi
 else
     CC := $(COMPILER)
-    CFLAGS += -pg
-    LDFLAGS += -pg
+    CFLAGS += 
+    LDFLAGS += 
 endif

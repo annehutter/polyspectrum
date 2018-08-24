@@ -21,6 +21,7 @@ kvectors_t *read_params_to_kvectors(confObj_t simParam);
 void deallocate_kvectors(kvectors_t *theseKvectors);
 
 double *generate_cosTheta_values(int numValues);
+double *generate_theta_values(int numValues);
 double *generate_k_values_bispectrum(int numValues, double k1, double k2);
 double *generate_k_values_powerspectrum(int grid_size, double box_size);
 

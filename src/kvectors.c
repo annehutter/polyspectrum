@@ -85,7 +85,7 @@ kvectors_t *read_params_to_kvectors(confObj_t simParam)
         if(simParam->num_values > 1)
         {
             /* multiple values */
-            theseKvectors->theta = generate_cosTheta_values(numValues);
+            theseKvectors->theta = generate_theta_values(numValues);
             theseKvectors->k = generate_k_values_bispectrum(numValues, k1, k2);
         }
         else
@@ -130,18 +130,30 @@ double *generate_cosTheta_values(int numValues)
     return cosTheta;
 }
 
+double *generate_theta_values(int numValues)
+{
+    double *theta = allocate_array_double(numValues, "theta");
+
+    for(int i=0; i<numValues; i++)
+    {
+        theta[i] = PI * (double)i / (double)numValues; /* from 1 to -1 */ 
+    }
+
+    return theta;
+}
+
 double *generate_k_values_bispectrum(int numValues, double k1, double k2)
 {
     double *k = allocate_array_double(numValues, "k");
-    double *cosTheta = generate_cosTheta_values(numValues);
+    double *theta = generate_theta_values(numValues);
     
     for(int i=0; i<numValues; i++)
     {
-        k[i] = k1*k1 + k2*k2 - 2.*k1*k2*cosTheta[i];
-        printf("%d: cosTheta = %e\t k = %e\n", i, cosTheta[i], k[i]);
+        k[i] = k1*k1 + k2*k2 - 2.*k1*k2*cos(theta[i]);
+        printf("%d: theta = %e\t k = %e\n", i, theta[i], k[i]);
     }
     
-    free(cosTheta);
+    free(theta);
     
     return k;
 }

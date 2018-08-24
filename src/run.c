@@ -56,7 +56,7 @@ void run(confObj_t simParam)
     
     // only rank 0 should output
     if(thisGrid->local_0_start == 0) 
-        save_polyspectrum(simParam, theseKvectors->numValues, theseKvectors->k, polyspec);
+        save_polyspectrum(simParam, theseKvectors->numValues, theseKvectors->theta, theseKvectors->k, polyspec);
     
     free(polyspec);
     fftw_free(thisFTfield);
@@ -66,7 +66,7 @@ void run(confObj_t simParam)
 }
 
 
-void save_polyspectrum(confObj_t simParam, int num, double *k, double *polyspectrum)
+void save_polyspectrum(confObj_t simParam, int num, double *theta, double *k, double *polyspectrum)
 {
     FILE *f;
     char ending[MAXLENGTH];
@@ -85,10 +85,21 @@ void save_polyspectrum(confObj_t simParam, int num, double *k, double *polyspect
 
     f = fopen(filename, "wb");
 
-    fprintf(f, "# k [h^-1 Mpc]\t Polyspectrum_%d(k)\n", simParam->n);
-    for(int i=0; i<num; i++)
+    if(simParam->n == 2)
     {
-        fprintf(f, "%e\t%e\n", k[i], polyspectrum[i]);
+        fprintf(f, "# k [h^-1 Mpc]\t Polyspectrum_%d(k)\n", simParam->n);
+        for(int i=0; i<num; i++)
+        {
+            fprintf(f, "%e\t%e\n", k[i], polyspectrum[i]);
+        }
+    }
+    else if(simParam->n ==3)
+    {
+        fprintf(f, "# theta [rad]\t k [h^-1 Mpc]\t Polyspectrum_%d(k)\n", simParam->n);
+        for(int i=0; i<num; i++)
+        {
+            fprintf(f, "%e\t%e\t%e\n", theta[i], k[i], polyspectrum[i]);
+        } 
     }
     
     fclose(f);
