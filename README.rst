@@ -3,7 +3,7 @@ Description
 
 Code to compute polyspectrum from a 3D grid following the method described in Watkinson et al. (2017).
 
-**IMPORTANT NOTE:**: This is work in progress and code has not been fully tested. Currently only powerspectra and bispectra are supported. Suggestions for improvements can be sent to `a.k.hutter@rug.nl`.
+**IMPORTANT:**: This is work in progress and code has not been fully tested. Currently only powerspectra and bispectra are supported. Suggestions for improvements can be sent to `a.k.hutter@rug.nl`.
 
 Installation
 ============
@@ -58,6 +58,7 @@ The first test case can then be run by
 
 Parameter file
 ``````````````
+
 The following parameters are specified in ``iniFile.ini``:
 
 **Grid**
@@ -87,7 +88,7 @@ The following parameters are specified in ``iniFile.ini``:
 - ``n``: number of vectors, i.e. ``n=2`` yields powerspectrum, ``n=3`` yields bispectrum
 - ``k1``: length of first vector in Mpc/h
 - ``k2``: length of second vector in Mpc/h (if n>2)
-- ``numValues``: set to 1, if only single value for polyspectrum should be calculated; for >1 and ``n>2`` number of k bins along ``theta = 0 to 180°``
+- ``numValues``: set to 1, if only single value for polyspectrum should be calculated; for >1 and ``n>2`` number of k bins along ``theta = 0 to 180``
 - ``theta``: angle between ``k1`` and ``k2`` in rad
 
 **Output**
