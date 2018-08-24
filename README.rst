@@ -56,10 +56,7 @@ The first test case can then be run by
 ``iniFile.ini`` contains all input parameters that are needed for any runs. For a different simulation the code does not need to be recompiled but just this parameter file iniFile.ini to be adapted.
 
 
-Parameter file
-``````````````
 
-The following parameters are specified in ``iniFile.ini``:
 
 **Grid**
 ........
@@ -72,3 +69,27 @@ The following parameters are specified in ``iniFile.ini``:
 - ``densityFile``: path to 3D density grid
 - ``ionFile``: pathr to 3D ionization grid
 
+**Cosmology**
+.............
+
+- ``hubble_h``: H = 100*hubble_h km/s/Mpc
+- ``omega_b``: baryon density parameter
+- ``omega_m``: matter density parameter
+- ``omega_l``: lambda density parameter
+- ``Y``: mass fraction of Helium in the primordial gas (assumed to consist of H and He)
+
+**Polyspectrum**
+................
+
+- ``whichField``: field from which the polyspectrum is calculated; options are: ``DENS`` for density, ``XHII`` for ionization fraction and ``XHI_DENS`` for neutral gas density
+- ``n``: number of vectors, i.e. ``n=2`` yields powerspectrum, ``n=3`` yields bispectrum
+- ``k1``: length of first vector in Mpc/h
+- ``k2``: length of second vector in Mpc/h (if n>2)
+- ``numValues``: set to 1, if only single value for polyspectrum should be calculated; for >1 and ``n>2`` number of k bins along ``theta = 0 to 180``
+- ``theta``: angle between ``k1`` and ``k2`` in rad
+
+**Output**
+..........
+
+- ``output_dir``: directory where output should be written
+- ``output_basename``: output name of the run
