@@ -40,6 +40,13 @@ void run(confObj_t simParam)
     {
         theseKvectors->kpolygon[theseKvectors->n-1] = theseKvectors->k[i];
         if(theseKvectors->n == 2) theseKvectors->kpolygon[0] = theseKvectors->k[i];
+        if(theseKvectors->n == 3)
+        {
+            if(theseKvectors->kpolygon[0] == theseKvectors->kpolygon[1])
+            {
+                for(int j=0; j<3; j++) theseKvectors->kpolygon[j] = theseKvectors->k[i];
+            }
+        }
         
         polyspec[i] = polyspectrum(thisGrid->nbins, thisGrid->local_n0, thisGrid->local_0_start, thisFTfield, theseKvectors->n, theseKvectors->kpolygon, thisGrid->box_size);
         
@@ -85,7 +92,7 @@ void save_polyspectrum(confObj_t simParam, int num, double *theta, double *k, do
 
     f = fopen(filename, "wb");
 
-    if(simParam->n == 2)
+    if(simParam->n == 2 || theta == NULL)
     {
         fprintf(f, "# k [h^-1 Mpc]\t Polyspectrum_%d(k)\n", simParam->n);
         for(int i=0; i<num; i++)

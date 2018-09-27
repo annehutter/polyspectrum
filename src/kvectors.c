@@ -80,24 +80,35 @@ kvectors_t *read_params_to_kvectors(confObj_t simParam)
     }
     else if(n == 3)
     {
-        theseKvectors->kpolygon[0] = k1;
-        theseKvectors->kpolygon[1] = k2;
-        if(simParam->num_values > 1)
+        if(k1 == k2)
         {
-            /* multiple values */
-            theseKvectors->theta = generate_theta_values(numValues);
-            theseKvectors->k = generate_k_values_bispectrum(numValues, k1, k2);
+            theseKvectors->kpolygon[0] = k1;
+            theseKvectors->kpolygon[1] = k2;
+            
+            assert(theseKvectors->numValues > 0);
+            theseKvectors->k = generate_k_values_num(numValues, grid_size, box_size);
         }
         else
-        {
-            /* single values */
-            assert(theseKvectors->numValues == 1);
-            numValues = 1;
-            theseKvectors->theta = allocate_array_double(numValues, "theta");
-            theseKvectors->k = allocate_array_double(numValues, "k");
-            
-            theseKvectors->theta[0] = theta;
-            theseKvectors->k[0] = k1*k1 + k2*k2 - 2.*k1*k2*cos(theta);
+        {   
+            theseKvectors->kpolygon[0] = k1;
+            theseKvectors->kpolygon[1] = k2;
+            if(simParam->num_values > 1)
+            {
+                /* multiple values */
+                theseKvectors->theta = generate_theta_values(numValues);
+                theseKvectors->k = generate_k_values_bispectrum(numValues, k1, k2);
+            }
+            else
+            {
+                /* single values */
+                assert(theseKvectors->numValues == 1);
+                numValues = 1;
+                theseKvectors->theta = allocate_array_double(numValues, "theta");
+                theseKvectors->k = allocate_array_double(numValues, "k");
+                
+                theseKvectors->theta[0] = theta;
+                theseKvectors->k[0] = k1*k1 + k2*k2 - 2.*k1*k2*cos(theta);
+            }
         }
     }
     else
@@ -149,8 +160,8 @@ double *generate_k_values_bispectrum(int numValues, double k1, double k2)
     
     for(int i=0; i<numValues; i++)
     {
-        k[i] = k1*k1 + k2*k2 - 2.*k1*k2*cos(theta[i]);
-        printf("%d: theta = %e\t k = %e\n", i, theta[i], k[i]);
+        k[i] = sqrt(k1*k1 + k2*k2 - 2.*k1*k2*cos(theta[i]));
+        printf("%d: theta = %e\t cos(theta) = %e\t k = %e\n", i, theta[i], cos(theta[i]), k[i]);
     }
     
     free(theta);
@@ -166,6 +177,19 @@ double *generate_k_values_powerspectrum(int grid_size, double box_size)
     for(int i=0; i<mid; i++)
     {
         k[i] = 2.*PI/box_size * (double)(i+1);
+    }
+    
+    return k;
+}
+
+double *generate_k_values_num(int numValues, int grid_size, double box_size)
+{
+    double *k = allocate_array_double(numValues, "k");
+    double kL = 2.*PI/box_size;
+    
+    for(int i=0; i<numValues; i++)
+    {
+        k[i] = kL * pow(grid_size/2,(double)(i+1)/(double)numValues);
     }
     
     return k;

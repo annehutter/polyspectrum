@@ -24,5 +24,6 @@ double *generate_cosTheta_values(int numValues);
 double *generate_theta_values(int numValues);
 double *generate_k_values_bispectrum(int numValues, double k1, double k2);
 double *generate_k_values_powerspectrum(int grid_size, double box_size);
+double *generate_k_values_num(int numValues, int grid_size, double box_size);
 
 #endif
