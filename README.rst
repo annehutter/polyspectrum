@@ -3,7 +3,7 @@ Description
 
 Code to compute polyspectrum from a 3D grid following the method described in `Watkinson et al. (2017) <http://adsabs.harvard.edu/abs/2017MNRAS.472.2436W>`__.
 
-**IMPORTANT:**: The current input file only supports powerspectra and bispectra. Test results analogue to Fig. 7 in `Watkinson et al. (2017) <http://adsabs.harvard.edu/abs/2017MNRAS.472.2436W>`__ can be found `here <https://github.com/annehutter/polyspectrum/bispectra_tests.pdf>`__. Suggestions for  improvements (particularly run time) are very welcome and can be sent to `a.k.hutter@rug.nl <a.k.hutter@rug.nl>`__.
+**IMPORTANT:**: The current input file only supports powerspectra and bispectra. Test results analogue to Fig. 7 in `Watkinson et al. (2017) <http://adsabs.harvard.edu/abs/2017MNRAS.472.2436W>`__ can be found `here <https://github.com/annehutter/polyspectrum/blob/master/bispectra_tests.pdf>`__. Suggestions for  improvements (particularly run time) are very welcome and can be sent to `a.k.hutter@rug.nl <a.k.hutter@rug.nl>`__.
 
 Installation
 ============
