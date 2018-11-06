@@ -1,0 +1,38 @@
+#! /bin/bash
+if [ $# -lt 0 ]; then
+  echo "Usage: ./run_bispectra"
+else
+  numproc=$1
+
+  filename=test.ini
+  
+  gridsize=600
+  boxsize=600.
+  gasInputInDoublePrecision=0
+  ionInputInDoublePrecision=0
+  densityFile=None
+  ionFile=/data/users/hutter/bispectrum/test/ionField_hhr_z11.0.dat
+  
+  hubble_h=0.7
+  omega_b=0.0456
+  omega_m=0.27
+  omega_l=0.73
+  sigma8=0.82
+  Y=0.24
+  
+  whichField=XHII
+  n=3
+  k1=0.5
+  k2=0.5
+  numValues=20
+  theta=0.5
+  
+  output_dir=/data/users/hutter/bispectrum/test/
+  output_basename=/data/users/hutter/bispectrum/test/TEST
+  
+  executable_dir=/Users/users/hutter/bispectrum
+  
+  $executable_dir/create_iniFile/./create_inifile $filename $gridsize $boxsize $gasInputInDoublePrecision $ionInputInDoublePrecision $densityFile $ionFile $hubble_h $omega_b $omega_m $omega_l $sigma8 $Y $whichField $n $k1 $k2 $numValues $theta $output_dir $output_basename
+
+  mpiexec -np $numproc $executable_dir/./polyspectrum $filename
+fi
