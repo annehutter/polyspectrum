@@ -30,7 +30,7 @@ void generate_XHIdens_field(grid_t *thisGrid)
         {
             for(int l=0; l<nbins; l++)
             {
-                thisGrid->signal21cm[i*nbins*nbins+j*nbins+l] = creal(thisGrid->igm_density[i*nbins*nbins+j*nbins+l]) * (1. - creal(i*nbins*nbins+j*nbins+l));
+                thisGrid->signal21cm[i*nbins*nbins+j*nbins+l] = creal(thisGrid->igm_density[i*nbins*nbins+j*nbins+l]) * (1. - creal(thisGrid->XHII[i*nbins*nbins+j*nbins+l])) + 0.*I;
             }
         }
     }
