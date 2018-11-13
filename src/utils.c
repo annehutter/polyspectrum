@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <complex.h>
 #include <string.h>
+#include <dirent.h>
 
 /* ------------------------------------------------------------*/
 /* RANDOM NUMBERS                                              */
@@ -147,4 +148,15 @@ int file_exist(char *filename)
     }else{
         return 0;
     }
+}
+
+int directory_exist(char *dirname)
+{
+    DIR *dir = opendir(dirname);
+    if(dir)
+    {
+        closedir(dir);
+        return 1;
+    }
+    else return 0;
 }

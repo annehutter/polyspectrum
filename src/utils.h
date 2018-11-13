@@ -37,5 +37,6 @@ double* allocate_array_double(int length, char *arrayname);
 /* FILE EXISTENCE                                              */
 /* ------------------------------------------------------------*/
 int file_exist(char *filename);
+int directory_exist(char *dirname);
 
 #endif

@@ -30,6 +30,11 @@ void run(confObj_t simParam)
 {
     kvectors_t *theseKvectors = read_params_to_kvectors(simParam);
     grid_t *thisGrid = initGrid_with_values(simParam->grid_size);
+    if(directory_exist(simParam->output_dir) == 0)
+    {
+        fprintf(stderr, "Directory for output does not exist!\n");
+        exit(EXIT_FAILURE);
+    }
 
     /* READING NECESSARY GRIDS & DERIVE THEIR FOURIER TRANSFORMATION */
     fftw_complex *thisFTfield = get_FT_field(thisGrid, simParam);
@@ -42,7 +47,7 @@ void run(confObj_t simParam)
         if(theseKvectors->n == 2) theseKvectors->kpolygon[0] = theseKvectors->k[i];
         if(theseKvectors->n == 3)
         {
-            if(theseKvectors->kpolygon[0] == theseKvectors->kpolygon[1])
+            if(simParam->equilateral == 1)
             {
                 for(int j=0; j<3; j++) theseKvectors->kpolygon[j] = theseKvectors->k[i];
             }
@@ -56,8 +61,7 @@ void run(confObj_t simParam)
         }
         if(theseKvectors->n == 3)
         {
-            printf("k1 = %e\t k2 = %e\n", theseKvectors->kpolygon[0], theseKvectors->kpolygon[1]);
-            printf("k3 = %e\t B(k) = %e\n", theseKvectors->k[i], polyspec[i]);
+            printf("k1 = %e\t k2 = %e\tk3 = %e\t B(k) = %e\n", theseKvectors->kpolygon[0], theseKvectors->kpolygon[1], theseKvectors->k[i], polyspec[i]);
         }
     }
     
@@ -83,16 +87,23 @@ void save_polyspectrum(confObj_t simParam, int num, double *theta, double *k, do
         sprintf(ending, "_ps.dat");
     else if (simParam->n == 3)
     {
-        if(simParam->num_values == 1)
-            sprintf(ending, "_bs_k_%4.2e_%4.2e_theta_%4.2e.dat", simParam->k1, simParam->k2, simParam->theta);
-        else sprintf(ending, "_bs_k_%4.2e_%4.2e.dat", simParam->k1, simParam->k2);
+        if(simParam->equilateral == 1)
+            sprintf(ending, "_bs_equilateral.dat");
+        else
+        {
+            if(simParam->num_values == 1)
+                sprintf(ending, "_bs_k_%4.2e_%4.2e_theta_%4.2e.dat", simParam->k1, simParam->k2, simParam->theta);
+            else sprintf(ending, "_bs_k_%4.2e_%4.2e.dat", simParam->k1, simParam->k2);
+        }
     }
 
     filename = concat3(simParam->output_dir, "/", simParam->output_basename, ending);
 
+    printf("FILENAME : %s\n", filename);
+    
     f = fopen(filename, "wb");
 
-    if(simParam->n == 2 || theta == NULL)
+    if(simParam->n == 2 || simParam->equilateral == 1)
     {
         fprintf(f, "# k [h^-1 Mpc]\t Polyspectrum_%d(k)\n", simParam->n);
         for(int i=0; i<num; i++)
@@ -100,7 +111,7 @@ void save_polyspectrum(confObj_t simParam, int num, double *theta, double *k, do
             fprintf(f, "%e\t%e\n", k[i], polyspectrum[i]);
         }
     }
-    else if(simParam->n ==3)
+    else if(simParam->n == 3)
     {
         fprintf(f, "# theta [rad]\t k [h^-1 Mpc]\t Polyspectrum_%d(k)\n", simParam->n);
         for(int i=0; i<num; i++)

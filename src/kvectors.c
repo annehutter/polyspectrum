@@ -80,7 +80,7 @@ kvectors_t *read_params_to_kvectors(confObj_t simParam)
     }
     else if(n == 3)
     {
-        if(k1 == k2)
+        if(simParam->equilateral == 1)
         {
             theseKvectors->kpolygon[0] = k1;
             theseKvectors->kpolygon[1] = k2;

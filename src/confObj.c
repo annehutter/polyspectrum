@@ -72,6 +72,8 @@ confObj_new(parse_ini_t ini)
                ini, "whichField", "Polyspectrum"); 
     getFromIni(&(config->n), parse_ini_get_int32,
                ini, "n", "Polyspectrum");
+    getFromIni(&(config->equilateral), parse_ini_get_int32,
+               ini, "equilateral", "Polyspectrum");
     getFromIni(&(config->k1), parse_ini_get_double,
                ini, "k1", "Polyspectrum");
     getFromIni(&(config->k2), parse_ini_get_double,

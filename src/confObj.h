@@ -41,6 +41,7 @@ struct confObj_struct {
     //Polyspectrum 
     char           *which_field;
     int            n;
+    int            equilateral;
     double         k1;
     double         k2;
     int            num_values;
