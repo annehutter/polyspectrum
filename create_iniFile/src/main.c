@@ -25,6 +25,7 @@ int main (int argc, /*const*/ char * argv[])
   
   char whichField[MAXLENGTH];
   int n = 0;
+  int equilateral = 0;
   float k1 = 0.;
   float k2 = 0.;
   int numValues = 1;
@@ -64,13 +65,14 @@ int main (int argc, /*const*/ char * argv[])
     
     strcpy(whichField, argv[14]);
     n = atoi(argv[15]);
-    k1 = atof(argv[16]);
-    k2 = atof(argv[17]);
-    numValues = atoi(argv[18]);
-    theta = atof(argv[19]);
+    equilateral = atoi(argv[16]);
+    k1 = atof(argv[17]);
+    k2 = atof(argv[18]);
+    numValues = atoi(argv[19]);
+    theta = atof(argv[20]);
     
-    strcpy(output_dir, argv[20]);
-    strcpy(output_basename, argv[21]);
+    strcpy(output_dir, argv[21]);
+    strcpy(output_basename, argv[22]);
   }
   
   file = fopen(filename, "wt");
@@ -95,6 +97,7 @@ int main (int argc, /*const*/ char * argv[])
   fprintf(file, "whichField = %s\n", whichField);
   fprintf(file, "# Possibilities: DENS, XHII, XHI_DENS\n");
   fprintf(file, "n = %d\n", n);
+  fprintf(file, "equilateral = %d\n", equilateral);
   fprintf(file, "k1 = %f\t# in h Mpc^-1\n", k1);
   fprintf(file, "k2 = %f\t# in h Mpc^-1\n", k2);
   fprintf(file, "numValues = %d\n", numValues);

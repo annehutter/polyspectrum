@@ -22,6 +22,7 @@ else
   
   whichField=XHII
   n=3
+  equilateral=0
   k1=0.5
   k2=0.5
   numValues=20
@@ -32,7 +33,7 @@ else
   
   executable_dir=/Users/users/hutter/bispectrum
   
-  $executable_dir/create_iniFile/./create_inifile $filename $gridsize $boxsize $gasInputInDoublePrecision $ionInputInDoublePrecision $densityFile $ionFile $hubble_h $omega_b $omega_m $omega_l $sigma8 $Y $whichField $n $k1 $k2 $numValues $theta $output_dir $output_basename
+  $executable_dir/create_iniFile/./create_inifile $filename $gridsize $boxsize $gasInputInDoublePrecision $ionInputInDoublePrecision $densityFile $ionFile $hubble_h $omega_b $omega_m $omega_l $sigma8 $Y $whichField $n $equilateral $k1 $k2 $numValues $theta $output_dir $output_basename
 
   mpiexec -np $numproc $executable_dir/./polyspectrum $filename
 fi
