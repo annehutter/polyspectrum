@@ -30,9 +30,11 @@ int main (int argc, /*const*/ char * argv[])
   float k2 = 0.;
   int numValues = 1;
   float theta = 0.;
+  float kbinwidth = 1.;
   
   char output_dir[MAXLENGTH];
   char output_basename[MAXLENGTH];
+  int write_numpolygons = 0;
   
   for(int i=0; i<MAXLENGTH; i++)
   {
@@ -70,9 +72,11 @@ int main (int argc, /*const*/ char * argv[])
     k2 = atof(argv[18]);
     numValues = atoi(argv[19]);
     theta = atof(argv[20]);
+    kbinwidth = atof(argv[21]);
     
-    strcpy(output_dir, argv[21]);
-    strcpy(output_basename, argv[22]);
+    strcpy(output_dir, argv[22]);
+    strcpy(output_basename, argv[23]);
+    write_numpolygons = atoi(argv[24]);
   }
   
   file = fopen(filename, "wt");
@@ -102,10 +106,12 @@ int main (int argc, /*const*/ char * argv[])
   fprintf(file, "k2 = %f\t# in h Mpc^-1\n", k2);
   fprintf(file, "numValues = %d\n", numValues);
   fprintf(file, "theta = %f\n", theta);
+  fprintf(file, "kbinwidth = %f\n", kbinwidth);
   
   fprintf(file, "\n[Output]\n");
   fprintf(file, "output_dir = %s\n", output_dir);
   fprintf(file, "output_basename = %s\n", output_basename);
+  fprintf(file, "write_numpolygons = %d\n", write_numpolygons);
   
   fclose(file);
   
