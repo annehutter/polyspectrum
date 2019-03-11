@@ -3,5 +3,6 @@
 
 void run(confObj_t simParam);
 void save_polyspectrum(confObj_t simParam, int num, double *theta, double *k, double *polyspectrum);
+void save_polyspectrum_numpolygons(confObj_t simParam, int num, double *theta, double *k, double *polyspectrum, double *numpolygons);
 
 #endif

@@ -74,8 +74,13 @@ void run(confObj_t simParam)
     }
     
     // only rank 0 should output
-    if(thisGrid->local_0_start == 0) 
-        save_polyspectrum(simParam, theseKvectors->numValues, theseKvectors->theta, theseKvectors->k, polyspec);
+    if(thisGrid->local_0_start == 0)
+    {
+        if(simParam->write_numpolygons == 1)
+            save_polyspectrum_numpolygons(simParam, theseKvectors->numValues, theseKvectors->theta, theseKvectors->k, polyspec, numPolygons);
+        else
+            save_polyspectrum(simParam, theseKvectors->numValues, theseKvectors->theta, theseKvectors->k, polyspec);
+    }
     
     free(polyspec);
     free(numPolygons);
@@ -126,6 +131,54 @@ void save_polyspectrum(confObj_t simParam, int num, double *theta, double *k, do
         for(int i=0; i<num; i++)
         {
             fprintf(f, "%e\t%e\t%e\n", theta[i], k[i], polyspectrum[i]);
+        } 
+    }
+    
+    fclose(f);
+    
+    free(filename);
+}
+
+void save_polyspectrum_numpolygons(confObj_t simParam, int num, double *theta, double *k, double *polyspectrum, double *numpolygons)
+{
+    FILE *f;
+    char ending[MAXLENGTH];
+    char *filename = NULL;
+    
+    if(simParam->n == 2)
+        sprintf(ending, "_ps.dat");
+    else if (simParam->n == 3)
+    {
+        if(simParam->equilateral == 1)
+            sprintf(ending, "_bs_equilateral.dat");
+        else
+        {
+            if(simParam->num_values == 1)
+                sprintf(ending, "_bs_k_%4.2e_%4.2e_theta_%4.2e.dat", simParam->k1, simParam->k2, simParam->theta);
+            else sprintf(ending, "_bs_k_%4.2e_%4.2e.dat", simParam->k1, simParam->k2);
+        }
+    }
+
+    filename = concat3(simParam->output_dir, "/", simParam->output_basename, ending);
+
+    printf("FILENAME : %s\n", filename);
+    
+    f = fopen(filename, "wb");
+
+    if(simParam->n == 2 || simParam->equilateral == 1)
+    {
+        fprintf(f, "# k [h^-1 Mpc]\t Polyspectrum_%d(k)\n", simParam->n);
+        for(int i=0; i<num; i++)
+        {
+            fprintf(f, "%e\t%e\t%e\n", k[i], polyspectrum[i], numpolygons[i]);
+        }
+    }
+    else if(simParam->n == 3)
+    {
+        fprintf(f, "# theta [rad]\t k [h^-1 Mpc]\t Polyspectrum_%d(k)\n", simParam->n);
+        for(int i=0; i<num; i++)
+        {
+            fprintf(f, "%e\t%e\t%e\t%e\n", theta[i], k[i], polyspectrum[i], numpolygons[i]);
         } 
     }
     
