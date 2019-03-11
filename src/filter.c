@@ -19,16 +19,16 @@
 #define PI acos(-1.0)
 
 
-fftw_complex *generate_kfilter(int nbins, int local_n0, int local_n0_start, double k, double boxsize)
+fftw_complex *generate_kfilter(int nbins, int local_n0, int local_n0_start, double k, double binwidth, double boxsize)
 {
     fftw_complex *kfilter = allocate_3D_array_fftw_complex(nbins);
     
-    construct_kfilter(nbins, local_n0, local_n0_start, kfilter, k, boxsize);
+    construct_kfilter(nbins, local_n0, local_n0_start, kfilter, k, binwidth, boxsize);
     
     return kfilter;
 }
 
-void construct_kfilter(int nbins, int local_n0, int local_n0_start, fftw_complex *array, double k, double boxsize)
+void construct_kfilter(int nbins, int local_n0, int local_n0_start, fftw_complex *array, double k, double binwidth, double boxsize)
 {
     double k_in_kf = k / (2.*PI) * boxsize;        // in units of k_F = 2*pi/L
     int half_nbins = nbins/2;
@@ -53,7 +53,7 @@ void construct_kfilter(int nbins, int local_n0, int local_n0_start, fftw_complex
                 
                 m = sqrt((double)(mx*mx + my*my + mz*mz));
                 expr = fabs(k_in_kf - m);
-                array[i*nbins*nbins + j*nbins + l] = (expr<=0.5) ? 1.+0.*I : 0.+0.*I;
+                array[i*nbins*nbins + j*nbins + l] = (expr<=0.5*binwidth) ? 1.+0.*I : 0.+0.*I;
             }
         }
     }

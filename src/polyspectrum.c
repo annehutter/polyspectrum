@@ -48,7 +48,7 @@ fftw_complex *generate_num_polygons(int nbins, fftw_complex *kfilter)
     return thisArray;
 }
 
-double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *fft_array, int n, double *k, double boxsize)
+double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *fft_array, int n, double *k, double kbinwidth, double boxsize)
 {
     fftw_complex *kfilter = NULL;
     fftw_complex *numPolygons = NULL;
@@ -75,7 +75,7 @@ double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *f
         /* Generating delta(n, k_i) & I(n, k_i) */
         /* ------------------------------------ */
 
-        kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], boxsize);
+        kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
         
         /* I(n, k_i) */
         numPolygons = generate_num_polygons(nbins, kfilter);
@@ -114,6 +114,61 @@ double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *f
         
     fftw_free(productNumPolygons);
     fftw_free(productValuesPolygons);
+    
+    return result;
+}
+
+double num_polygons(int nbins, int local_n0, int local_n0_start, int n, double *k, double kbinwidth, double boxsize)
+{
+    fftw_complex *kfilter = NULL;
+    fftw_complex *numPolygons = NULL;
+    
+    fftw_complex *productNumPolygons = allocate_3D_array_fftw_complex(nbins);
+    
+    double sumNumPolygons = 0.;
+    
+    double result = 0.;
+
+    for(int i=0; i<local_n0*nbins*nbins; i++)
+    {
+        productNumPolygons[i] = 1.+0.*I;
+    }
+    
+    for(int i=0; i<n; i++)
+    {
+        /* ------------------------------------ */
+        /* Generating I(n, k_i)                 */
+        /* ------------------------------------ */
+
+        kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
+        
+        /* I(n, k_i) */
+        numPolygons = generate_num_polygons(nbins, kfilter);
+        
+        /* product */
+        product_3D_fftw_arrays(nbins, local_n0, productNumPolygons, numPolygons, productNumPolygons);
+
+        fftw_free(kfilter);
+        fftw_free(numPolygons);
+    }
+
+    /* ---------------------------------------- */
+    /* Summing I(n, k_i) over n                 */
+    /* ---------------------------------------- */
+    
+    sumNumPolygons = creal(sum_3D_fftw_array(nbins, local_n0, productNumPolygons));
+    
+#ifdef __MPI
+    double recvSumNumPolygons = 0.;
+
+    MPI_Allreduce(&sumNumPolygons, &recvSumNumPolygons, 1, MPI_DOUBLE, MPI_SUM, MPI_COMM_WORLD);
+    
+    sumNumPolygons = recvSumNumPolygons;
+#endif
+    
+    result = creal(sumNumPolygons);
+        
+    fftw_free(productNumPolygons);
     
     return result;
 }

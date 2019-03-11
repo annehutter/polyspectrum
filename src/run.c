@@ -40,7 +40,8 @@ void run(confObj_t simParam)
     fftw_complex *thisFTfield = get_FT_field(thisGrid, simParam);
 
     double *polyspec = allocate_array_double(theseKvectors->numValues, "polyspectrum");
-    
+    double *numPolygons = allocate_array_double(theseKvectors->numValues, "polyspectrum");
+
     for(int i=0; i<theseKvectors->numValues; i++)
     {
         theseKvectors->kpolygon[theseKvectors->n-1] = theseKvectors->k[i];
@@ -53,7 +54,9 @@ void run(confObj_t simParam)
             }
         }
         
-        polyspec[i] = polyspectrum(thisGrid->nbins, thisGrid->local_n0, thisGrid->local_0_start, thisFTfield, theseKvectors->n, theseKvectors->kpolygon, thisGrid->box_size);
+        polyspec[i] = polyspectrum(thisGrid->nbins, thisGrid->local_n0, thisGrid->local_0_start, thisFTfield, theseKvectors->n, theseKvectors->kpolygon, simParam->kbinwidth, thisGrid->box_size);
+        if(simParam->write_numpolygons == 1)
+            numPolygons[i] = num_polygons(thisGrid->nbins, thisGrid->local_n0, thisGrid->local_0_start, theseKvectors->n, theseKvectors->kpolygon, simParam->kbinwidth, thisGrid->box_size);
         
         if(theseKvectors->n == 2)
         {
@@ -63,6 +66,11 @@ void run(confObj_t simParam)
         {
             printf("k1 = %e\t k2 = %e\tk3 = %e\t B(k) = %e\n", theseKvectors->kpolygon[0], theseKvectors->kpolygon[1], theseKvectors->k[i], polyspec[i]);
         }
+        
+        if(simParam->write_numpolygons == 1)
+        {
+            printf("k = %e\t Npolygons = %e\n", theseKvectors->k[i], numPolygons[i]);
+        }
     }
     
     // only rank 0 should output
@@ -70,6 +78,7 @@ void run(confObj_t simParam)
         save_polyspectrum(simParam, theseKvectors->numValues, theseKvectors->theta, theseKvectors->k, polyspec);
     
     free(polyspec);
+    free(numPolygons);
     fftw_free(thisFTfield);
     
     deallocate_grid(thisGrid);

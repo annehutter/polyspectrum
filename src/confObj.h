@@ -46,10 +46,12 @@ struct confObj_struct {
     double         k2;
     int            num_values;
     double         theta;
+    double         kbinwidth;
     
     //Output
     char           *output_dir;
     char           *output_basename;
+    int            write_numpolygons;
 };
 
 

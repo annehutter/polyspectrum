@@ -52,6 +52,8 @@ confObj_new(parse_ini_t ini)
                ini, "output_dir", "Output");
     getFromIni(&(config->output_basename), parse_ini_get_string,
                ini, "output_basename", "Output");
+    getFromIni(&(config->write_numpolygons), parse_ini_get_int32,
+               ini, "write_numpolygons", "Output");
     
     //Cosmology
     getFromIni(&(config->h), parse_ini_get_double,
@@ -82,6 +84,8 @@ confObj_new(parse_ini_t ini)
                ini, "numValues", "Polyspectrum");
     getFromIni(&(config->theta), parse_ini_get_double,
                ini, "theta", "Polyspectrum");
+    getFromIni(&(config->kbinwidth), parse_ini_get_double,
+               ini, "kbinwidth", "Polyspectrum");
     
     return config;
 }
