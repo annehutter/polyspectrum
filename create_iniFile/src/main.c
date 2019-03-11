@@ -44,7 +44,7 @@ int main (int argc, /*const*/ char * argv[])
     output_basename[i] = '\0';
   }
   
-  if(argc != 23)
+  if(argc != 25)
   {
     printf("create_inifile: (C) Use at own risk...\nUSAGE: create_inifile <FILE>\n");
   }
