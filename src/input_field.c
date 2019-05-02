@@ -43,7 +43,7 @@ fftw_complex *get_FT_field(grid_t *thisGrid, confObj_t simParam)
 
     //read in fields (option 1: ionization field, option 2: density & ionization field ->21cm field)
     read_boxsize(thisGrid, simParam->box_size);
-    printf("%s++\n", simParam->which_field);
+    if(thisGrid->local_0_start == 0) printf("Option: %s\t", simParam->which_field);
     
     if(strcmp(simParam->which_field, "DENS") == 0)
     {
@@ -68,14 +68,14 @@ fftw_complex *get_FT_field(grid_t *thisGrid, confObj_t simParam)
         exit(EXIT_FAILURE);
     }
     
-    if(thisGrid->local_0_start == 0) printf("Chosen field is %s. Mean value from FT is %e\n", simParam->which_field, creal(thisField[0]));
+    if(thisGrid->local_0_start == 0) printf(" Mean value from FT is %e\nComputing FFT... ", creal(thisField[0]));
     
     /* allocating Fourier transformed grid */
     fftw_complex *thisFTfield = allocate_3D_array_fftw_complex(thisGrid->nbins);
         
     //Fourier transforming field to k-space
     fft_real_to_kspace(thisGrid->nbins, thisField, thisFTfield);
-    printf("done FFT\n");
+    if(thisGrid->local_0_start == 0) printf("done.\n");
     
     return thisFTfield;
 }

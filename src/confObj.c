@@ -11,6 +11,7 @@
 #include "confObj.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 #include <inttypes.h>
 #include <stdbool.h>
@@ -30,6 +31,8 @@ confObj_new(parse_ini_t ini)
     assert(ini != NULL);
     
     config = xmalloc(sizeof(struct confObj_struct));
+    
+    char *kbinningCase = NULL;
     
     //reading mandatory stuff
 
@@ -86,6 +89,20 @@ confObj_new(parse_ini_t ini)
                ini, "theta", "Polyspectrum");
     getFromIni(&(config->kbinwidth), parse_ini_get_double,
                ini, "kbinwidth", "Polyspectrum");
+    getFromIni(&(config->dcosTheta), parse_ini_get_double,
+               ini, "cosThetaBinwidth", "Polyspectrum");
+    getFromIni(&kbinningCase, parse_ini_get_string,
+               ini, "kbinningCase", "Polyspectrum");
+    if(strcmp(kbinningCase, "DERIVED_BINNING") == 0)
+      config->kbinningCase = 1;
+    else if(strcmp(kbinningCase, "GIVEN_BINNING") == 0)
+      config->kbinningCase = 2;
+    else if(strcmp(kbinningCase, "WATKINSON") == 0)
+      config->kbinningCase = 3;
+    else
+      config->kbinningCase = 0;
+          
+    xfree(kbinningCase);
     
     return config;
 }

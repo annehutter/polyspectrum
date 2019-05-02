@@ -48,7 +48,7 @@ fftw_complex *generate_num_polygons(int nbins, fftw_complex *kfilter)
     return thisArray;
 }
 
-double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *fft_array, int n, double *k, double kbinwidth, double boxsize)
+double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *fft_array, int n, double *k, double *kmin, double *kmax, double kbinwidth, int kbinningCase, double boxsize)
 {
     fftw_complex *kfilter = NULL;
     fftw_complex *numPolygons = NULL;
@@ -75,7 +75,47 @@ double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *f
         /* Generating delta(n, k_i) & I(n, k_i) */
         /* ------------------------------------ */
 
-        kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
+        /* Constructing filter in k-space */
+        switch(kbinningCase)
+        {
+            case 1:
+                if(i < n-1)
+                    kfilter = generate_kfilter_with_determining_kbinwidth(nbins, local_n0, local_n0_start, &(kmin[i]), &(kmax[i]), k[i], kbinwidth, boxsize);
+                else
+                {
+                    switch(n)
+                    {
+                      case 3: 
+                        calc_k3_min_and_max(k, &kmin, &kmax);
+                        break;
+                        
+                      default:
+                        calc_kn_min_and_max(n, k, &kmin, &kmax);
+                    }
+                    kfilter = generate_kfilter_with_kbinwidth(nbins, local_n0, local_n0_start, kmin[i], kmax[i], kbinwidth, boxsize);
+                }
+//                 printf("k[%d] = %e\tkmin[%d] = %e\t kmax[%d] = %e\n", i, k[i], i, kmin[i], i, kmax[i]);
+                break;
+            
+            case 2:
+                if(i < n-1)
+                    kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
+                else
+                    kfilter = generate_kfilter_with_kbinwidth(nbins, local_n0, local_n0_start, kmin[i], kmax[i], kbinwidth, boxsize);
+//                 printf("k[%d] = %e\tkmin[%d] = %e\t kmax[%d] = %e\n", i, k[i], i, kmin[i], i, kmax[i]);
+                break;
+            
+            case 3:
+                if(i < n-1)
+                    kfilter = generate_kfilter_Watkinson(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
+                else
+                    kfilter = generate_kfilter_Watkinson_kn(nbins, local_n0, local_n0_start, kmin[i], kmax[i], kbinwidth, boxsize);
+//                 printf("k[%d] = %e\tkmin[%d] = %e\t kmax[%d] = %e\n", i, k[i], i, kmin[i], i, kmax[i]);
+                break;
+                
+            default:
+                kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
+        }
         
         /* I(n, k_i) */
         numPolygons = generate_num_polygons(nbins, kfilter);
@@ -118,7 +158,7 @@ double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *f
     return result;
 }
 
-double num_polygons(int nbins, int local_n0, int local_n0_start, int n, double *k, double kbinwidth, double boxsize)
+double num_polygons(int nbins, int local_n0, int local_n0_start, int n, double *k, double *kmin, double *kmax, double kbinwidth, int kbinningCase, double boxsize)
 {
     fftw_complex *kfilter = NULL;
     fftw_complex *numPolygons = NULL;
@@ -140,8 +180,44 @@ double num_polygons(int nbins, int local_n0, int local_n0_start, int n, double *
         /* Generating I(n, k_i)                 */
         /* ------------------------------------ */
 
-        kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
-        
+        /* Constructing filter in k-space */
+        switch(kbinningCase)
+        {
+            case 1:
+                if(i < n-1)
+                    kfilter = generate_kfilter_with_determining_kbinwidth(nbins, local_n0, local_n0_start, &(kmin[i]), &(kmax[i]), k[i], kbinwidth, boxsize);
+                else
+                {
+                    switch(n)
+                    {
+                      case 3: 
+                        calc_k3_min_and_max(k, &kmin, &kmax);
+                        break;
+                        
+                      default:
+                        calc_kn_min_and_max(n, k, &kmin, &kmax);
+                    }
+                    kfilter = generate_kfilter_with_kbinwidth(nbins, local_n0, local_n0_start, kmin[i], kmax[i], kbinwidth, boxsize);
+                }
+                break;
+            
+            case 2:
+                if(i < n-1)
+                    kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
+                else
+                    kfilter = generate_kfilter_with_kbinwidth(nbins, local_n0, local_n0_start, kmin[i], kmax[i], kbinwidth, boxsize);
+                break;
+            
+            case 3:
+                if(i < n-1)
+                    kfilter = generate_kfilter_Watkinson(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
+                else
+                    kfilter = generate_kfilter_Watkinson_kn(nbins, local_n0, local_n0_start, kmin[i], kmax[i], kbinwidth, boxsize);
+                break;
+                
+            default:
+                kfilter = generate_kfilter(nbins, local_n0, local_n0_start, k[i], kbinwidth, boxsize);
+        }        
         /* I(n, k_i) */
         numPolygons = generate_num_polygons(nbins, kfilter);
         
@@ -166,7 +242,7 @@ double num_polygons(int nbins, int local_n0, int local_n0_start, int n, double *
     sumNumPolygons = recvSumNumPolygons;
 #endif
     
-    result = creal(sumNumPolygons);
+    result = creal(sumNumPolygons) / (double)(nbins * nbins * nbins);   // need to divide by the number of pixels in simulation box
         
     fftw_free(productNumPolygons);
     

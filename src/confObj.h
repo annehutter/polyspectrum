@@ -47,6 +47,8 @@ struct confObj_struct {
     int            num_values;
     double         theta;
     double         kbinwidth;
+    int            kbinningCase;
+    double         dcosTheta;
     
     //Output
     char           *output_dir;

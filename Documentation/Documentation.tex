@@ -35,7 +35,7 @@
 \usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
 \usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
 
-\usepackage{abstract} % Allows abstract customization
+% \usepackage{abstract} % Allows abstract customization
 % \renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
 % \renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
 
@@ -133,6 +133,11 @@ whereas the functions $\mathscr{F}$ and $\mathscr{I}$ are given as
 $N_\mathrm{pix}$ are all cells, i.e. for a 3D grid this would be $N_\mathrm{side}^3$.
 ${\bf l}_i = |({\bf k}_i/k_F)-{\bf m}_i|$ represent the deviation between the exact value of ${\bf k}_i$ and the binned value $k_F {\bf m}_i$. $s$ represents the binwidth and ideally should be kept to the width of a pixel.
 
+The number of polygons that are considered for computing the polyspectrum of a chosen configuration $({\bf k_1}, {\bf k_2},..., {\bf k_p})$ is 
+\begin{eqnarray}
+ N_\mathrm{polygon} &=& \frac{1}{N_\mathrm{pix}} \sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{I}({\bf n}, {\bf k}_i).
+\end{eqnarray}
+
 \paragraph{Computing $\mathscr{I}$:}
 
 In practise we can compute $\mathscr{D}$ and $\mathscr{I}$ as follows: We identify all pixels that fulfill the criterion ${\bf k}_i/k_f \simeq {\bf m}_i$, and generate a filter $\mathscr{F}({\bf m}_i)$ that is $1$ when the criterion is fulfilled and $0$ otherwise. Since we want all triangles that fulfill $\sum\limits_i^p {\bf m}_i=0$, the actual criterion is $|{\bf k}_i|/k_f = |{\bf m}_i|$.
@@ -155,6 +160,15 @@ and with the Fourier definition according to {\sc numpy}
 \begin{eqnarray}
  \mathscr{P}({\bf k}_1, {\bf k}_2, ..., {\bf k}_p) &\approx& V^{p-1}  \frac{\sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{D}({\bf n}, {\bf k}_i)}{\sum\limits_{n}^{N_\mathrm{pix}} \prod\limits_{i=1}^p \mathscr{I}({\bf n}, {\bf k}_i)}.
 \end{eqnarray}
+
+
+\paragraph{Computing $N_\mathrm{polygon}$:}
+
+The number of polygons is derived from $\mathscr{I}$ as 
+\begin{eqnarray}
+ N_\mathrm{polygon} &=& \frac{\mathscr{I}}{N_\mathrm{pix}}.
+\end{eqnarray}
+Note, the number of polygons on a fixed grid will depend on the binwidth of the ${\bf k}_i$ vectors. As the ${\bf k}_i$ binwidth is increased, the corresponding real space binwidth decreases indeed, however the real space fluctuations vary increasingly in strength, they are - so to say - not homogeneous in their fluctuations anymore. 
 
 \paragraph{Note:} The resulting powerspectrum relates to the dimension free power spectrum as $\Delta^2(k)= \frac{1}{2\pi^2} k^3 P(k)$.
 

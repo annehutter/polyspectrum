@@ -30,7 +30,7 @@
 
 int main (int argc, /*const*/ char * argv[]) { 
     int size = 1;
-    int myRank = 0;
+    int thisRank = 0;
 
     char iniFile[MAXLENGTH];
     confObj_t simParam;
@@ -40,7 +40,7 @@ int main (int argc, /*const*/ char * argv[]) {
 #ifdef __MPI
     MPI_Init(&argc, &argv); 
     MPI_Comm_size(MPI_COMM_WORLD, &size); 
-    MPI_Comm_rank(MPI_COMM_WORLD, &myRank); 
+    MPI_Comm_rank(MPI_COMM_WORLD, &thisRank); 
     
     t1 = MPI_Wtime();
     
@@ -64,7 +64,7 @@ int main (int argc, /*const*/ char * argv[]) {
     simParam = readConfObj(iniFile);
 
     //run polyspectrum calculator
-    run(simParam);
+    run(simParam, size, thisRank);
 
     //deallocation
     confObj_del(&simParam);
