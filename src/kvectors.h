@@ -7,6 +7,11 @@ typedef struct
 {
     int n;
     double *kpolygon;
+    double *kpolygonMin;
+    double *kpolygonMax;
+    double kbinwidth;
+    int kbinningCase;
+    double dcosTheta;
     
     int numValues;
     double *theta;
@@ -25,5 +30,9 @@ double *generate_theta_values(int numValues);
 double *generate_k_values_bispectrum(int numValues, double k1, double k2);
 double *generate_k_values_powerspectrum(int grid_size, double box_size);
 double *generate_k_values_num(int numValues, int grid_size, double box_size);
+
+double calc_k3(double k1, double k2, double cosTheta);
+double calc_k3min(kvectors_t *theseKvectors, int i);
+double calc_k3max(kvectors_t *theseKvectors, int i);
 
 #endif
