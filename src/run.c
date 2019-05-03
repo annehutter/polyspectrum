@@ -30,7 +30,9 @@ void run(confObj_t simParam, int size, int thisRank)
 {
     /* READING INPUT PARAMETERS */
     kvectors_t *theseKvectors = read_params_to_kvectors(simParam);
-    
+    if(thisRank == 0)
+        printf("kbinningCase = %d\n", theseKvectors->kbinningCase);
+        
     /* INITIALIZING GRIDS */
     grid_t *thisGrid = initGrid_with_values(simParam->grid_size);
     if(directory_exist(simParam->output_dir) == 0)
