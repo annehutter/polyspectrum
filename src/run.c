@@ -28,6 +28,8 @@
 
 void run(confObj_t simParam, int size, int thisRank)
 {
+    int calc_phases_only = 0;
+    
     /* READING INPUT PARAMETERS */
     kvectors_t *theseKvectors = read_params_to_kvectors(simParam);
     if(thisRank == 0)
@@ -43,6 +45,8 @@ void run(confObj_t simParam, int size, int thisRank)
 
     /* READING NECESSARY GRIDS & DERIVE THEIR FOURIER TRANSFORMATION */
     fftw_complex *thisFTfield = get_FT_field(thisGrid, simParam);
+    if(calc_phases_only == 1)
+        calc_phase_3D_fftw_array(thisGrid->nbins, thisGrid->local_n0, thisFTfield);
 
     /* ALLOCATION */
     double *polyspec = allocate_array_double(theseKvectors->numValues, "polyspectrum");
