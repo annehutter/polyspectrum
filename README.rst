@@ -101,3 +101,4 @@ The following parameters are specified in ``iniFile.ini``:
 
 - ``output_dir``: directory where output should be written
 - ``output_basename``: output name of the run
+- ``write_numpolygons``: ``1`` if output files should contain number of polygons, otherwise they are not included in the output
