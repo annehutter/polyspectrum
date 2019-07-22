@@ -70,7 +70,7 @@ The following parameters are specified in ``iniFile.ini``:
 - ``gasInputsInDoublePrecision``: set to 0 for single, 1 for double precision for density fields being read
 - ``ionInputsInDoublePrecision``: set to 0 for single, 1 for double precision for ionization fields being read
 - ``densityFile``: path to 3D density grid
-- ``ionFile``: pathr to 3D ionization grid
+- ``ionFile``: path to 3D ionization grid
 
 **Cosmology**
 '''''''''''''
