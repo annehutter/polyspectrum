@@ -87,6 +87,27 @@ parse_ini_get_int32(parse_ini_t ini,
 
 
 /**
+ * \brief  Returns the value of a given key in a given section as a
+ *         signed 32bit integer.
+ *
+ * \param  ini            The ini file to work on.
+ * \param  *key_name      The key name to look for.
+ * \param  *section_name  The section in which to look.
+ * \param  *value         A pointer to the variable that will hold the
+ *                        result. This will only be set if the function
+ *                        returns true.
+ *
+ * \return  Returns true if the value was found and something got passed
+ *          back via the result pointer, otherwise false is returned.
+ */
+extern bool
+parse_ini_get_int32_ifavail(parse_ini_t ini,
+                    const char  *key_name,
+                    const char  *section_name,
+                    int32_t     *value);
+
+
+/**
  * \brief  Returns the value of a given key in a given section as an
  *         unsigned 32bit integer.
  *

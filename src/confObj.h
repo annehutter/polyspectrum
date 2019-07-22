@@ -40,6 +40,7 @@ struct confObj_struct {
     
     //Polyspectrum 
     char           *which_field;
+    int            calc_phases_only;
     int            n;
     int            equilateral;
     double         k1;

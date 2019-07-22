@@ -28,7 +28,7 @@
 
 void run(confObj_t simParam, int size, int thisRank)
 {
-    int calc_phases_only = 0;
+    int calc_phases_only = simParam->calc_phases_only;
     
     /* READING INPUT PARAMETERS */
     kvectors_t *theseKvectors = read_params_to_kvectors(simParam);

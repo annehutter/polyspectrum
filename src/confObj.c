@@ -75,6 +75,11 @@ confObj_new(parse_ini_t ini)
     //Polyspectrum
     getFromIni(&(config->which_field), parse_ini_get_string,
                ini, "whichField", "Polyspectrum"); 
+//     local_find_key(local_section_t sec, const char *key_name);
+//     {
+        getFromIni(&(config->calc_phases_only), parse_ini_get_int32_ifavail,
+                  ini, "useOnlyPhase", "Polyspectrum");
+//     }
     getFromIni(&(config->n), parse_ini_get_int32,
                ini, "n", "Polyspectrum");
     getFromIni(&(config->equilateral), parse_ini_get_int32,

@@ -85,11 +85,16 @@ The following parameters are specified in ``iniFile.ini``:
 ''''''''''''''''
 
 - ``whichField``: field from which the polyspectrum is calculated; options are: ``DENS`` for density, ``XHII`` for ionization fraction and ``XHI_DENS`` for neutral gas density
+- ``useOnlyPhase``: ``1`` yields the phase-only bispectrum 
 - ``n``: number of vectors, i.e. ``n=2`` yields powerspectrum, ``n=3`` yields bispectrum
+- ``equilateral``: ``1`` yields bispectrum for equilateral triangles with ``numValues`` providing the number of k-values depending on the box and gridsize of the simulation box, for all values not equal to ``1`` non-equilateral triangles are computed
 - ``k1``: length of first vector in Mpc/h
 - ``k2``: length of second vector in Mpc/h (if n>2)
 - ``numValues``: set to 1, if only single value for polyspectrum should be calculated; for >1 and ``n>2`` number of k bins along ``theta = 0 to 180``
 - ``theta``: angle between ``k1`` and ``k2`` in rad
+- ``kbinwidth``: bin width in k-space in units of grid cells for computing the bispectra
+- ``kbinningCase``: ``DEFAULT`` assumes for all k vectors a binwidth in k-space of ``kbinwidth``, ``GIVEN_BINNING`` assumes for ``k1`` and ``k2`` a binwidth in k-space of ``kbinwidth`` and for ``k3`` a width that corresponds to ``cosThetaBinwidth``, ``DERIVED_BINNING`` assumes for ``k1`` and ``k2`` a binwidth in k-space of ``kbinwidth`` and for ``k3`` it derives the binwidth from the allowed ranges given by the uncertainties of ``k1`` and ``k2``
+- ``cosThetaBinwidth``: binwidth in cos(theta)
 
 **Output**
 ''''''''''

@@ -139,6 +139,8 @@ double polyspectrum(int nbins, int local_n0, int local_n0_start, fftw_complex *f
     sumNumPolygons = creal(sum_3D_fftw_array(nbins, local_n0, productNumPolygons));
     sumValuesPolygons = creal(sum_3D_fftw_array(nbins, local_n0, productValuesPolygons));
     
+    printf("rank %d: cimag(sumNumPolygons)/creal(sumNumPolygons) = %e\n\tcimag(sumValuesPolygons)/creal(sumValuesPolygons) = %e\n", local_n0_start/local_n0, cimag(sum_3D_fftw_array(nbins, local_n0, productNumPolygons))/creal(sum_3D_fftw_array(nbins, local_n0, productNumPolygons)), cimag(sum_3D_fftw_array(nbins, local_n0, productValuesPolygons))/creal(sum_3D_fftw_array(nbins, local_n0, productValuesPolygons)));
+    
 #ifdef __MPI
     double recvSumNumPolygons = 0.;
     double recvSumValuesPolygons = 0.;
