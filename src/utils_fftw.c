@@ -75,3 +75,19 @@ fftw_complex sum_3D_fftw_array(int nbins, int local_n0, fftw_complex *array)
     return sum;
 }
 
+void calc_phase_3D_fftw_array(int nbins, int local_n0, fftw_complex *array)
+{    
+    fftw_complex value = 0. + 0.*I;
+    
+    for(int i=0; i<local_n0; i++)
+    {
+        for(int j=0; j<nbins; j++)
+        {
+            for(int l=0; l<nbins; l++)
+            {
+                value = array[i*nbins*nbins + j*nbins + l];
+                array[i*nbins*nbins + j*nbins + l] = creal(value)/cabs(value);
+            }
+        }
+    }
+}

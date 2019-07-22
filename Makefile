@@ -18,7 +18,7 @@ OBJECTS := $(SOURCES:.c=.o)
 DOBJECTS := $(SOURCES:.c=.d)
 EXECUTABLE := polyspectrum
 
-#USE-MPI=YES
+USE-MPI=YES
  
 include common.mk
 

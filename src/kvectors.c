@@ -232,7 +232,7 @@ double calc_k3(double k1, double k2, double cosTheta)
 
 double calc_k3min(kvectors_t *theseKvectors, int i)
 {
-    double cosTheta = fmax(-1., cos(theseKvectors->theta[i]) + 0.5 * theseKvectors->dcosTheta);
+    double cosTheta = fmin(1., cos(theseKvectors->theta[i]) + 0.5 * theseKvectors->dcosTheta);
     double k3min = calc_k3(theseKvectors->kpolygon[0], theseKvectors->kpolygon[1], cosTheta);
     
     return k3min;
@@ -240,7 +240,7 @@ double calc_k3min(kvectors_t *theseKvectors, int i)
 
 double calc_k3max(kvectors_t *theseKvectors, int i)
 {
-    double cosTheta = fmin(1., cos(theseKvectors->theta[i]) - 0.5 * theseKvectors->dcosTheta);
+    double cosTheta = fmax(-1., cos(theseKvectors->theta[i]) - 0.5 * theseKvectors->dcosTheta);
     double k3max = calc_k3(theseKvectors->kpolygon[0], theseKvectors->kpolygon[1], cosTheta);
     
     return k3max;

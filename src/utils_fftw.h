@@ -8,4 +8,6 @@ void product3_3D_fftw_arrays(int nbins, int local_n0, fftw_complex *array1, fftw
 
 fftw_complex sum_3D_fftw_array(int nbins, int local_n0, fftw_complex *array);
 
+void calc_phase_3D_fftw_array(int nbins, int local_n0, fftw_complex *array);
+
 #endif

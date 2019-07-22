@@ -31,6 +31,8 @@ int main (int argc, /*const*/ char * argv[])
   int numValues = 1;
   float theta = 0.;
   float kbinwidth = 1.;
+  char kbinningCase[MAXLENGTH];
+  float dcosTheta = 0.;
   
   char output_dir[MAXLENGTH];
   char output_basename[MAXLENGTH];
@@ -40,11 +42,12 @@ int main (int argc, /*const*/ char * argv[])
   {
     densityFile[i] = '\0';
     ionFile[i] = '\0';
+    kbinningCase[i] = '\0';
     output_dir[i] = '\0';
     output_basename[i] = '\0';
   }
   
-  if(argc != 25)
+  if(argc != 27)
   {
     printf("create_inifile: (C) Use at own risk...\nUSAGE: create_inifile <FILE>\n");
   }
@@ -73,10 +76,12 @@ int main (int argc, /*const*/ char * argv[])
     numValues = atoi(argv[19]);
     theta = atof(argv[20]);
     kbinwidth = atof(argv[21]);
+    strcpy(kbinningCase, argv[22]);
+    dcosTheta = atof(argv[23]);
     
-    strcpy(output_dir, argv[22]);
-    strcpy(output_basename, argv[23]);
-    write_numpolygons = atoi(argv[24]);
+    strcpy(output_dir, argv[24]);
+    strcpy(output_basename, argv[25]);
+    write_numpolygons = atoi(argv[26]);
   }
   
   file = fopen(filename, "wt");
@@ -107,6 +112,8 @@ int main (int argc, /*const*/ char * argv[])
   fprintf(file, "numValues = %d\n", numValues);
   fprintf(file, "theta = %f\n", theta);
   fprintf(file, "kbinwidth = %f\n", kbinwidth);
+  fprintf(file, "kbinningCase = %s\n", kbinningCase);
+  fprintf(file, "cosThetaBinwidth = %f\n", dcosTheta);
   
   fprintf(file, "\n[Output]\n");
   fprintf(file, "output_dir = %s\n", output_dir);
