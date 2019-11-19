@@ -86,7 +86,7 @@ void calc_phase_3D_fftw_array(int nbins, int local_n0, fftw_complex *array)
             for(int l=0; l<nbins; l++)
             {
                 value = array[i*nbins*nbins + j*nbins + l];
-                array[i*nbins*nbins + j*nbins + l] = creal(value)/cabs(value);
+                array[i*nbins*nbins + j*nbins + l] = value/cabs(value);
             }
         }
     }
