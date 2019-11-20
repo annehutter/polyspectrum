@@ -106,8 +106,6 @@ confObj_new(parse_ini_t ini)
           
     xfree(kbinningCase);
     
-    printf("n = %d\t useOnlyPase = %d\n", config->n, config->calc_phases_only);
-    
     return config;
 }
 
